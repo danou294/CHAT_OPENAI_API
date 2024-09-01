@@ -1,0 +1,57 @@
+# Fichiers et dossiers spécifiques à ignorer pour Docker
+
+# Dossiers Django
+/__pycache__/
+/migrations/
+
+# Fichiers Django
+*.pyc
+*.pyo
+*.pyd
+
+# Fichiers de l'environnement virtuel
+.env
+.venv
+venv/
+env/
+
+# Fichiers de l'IDE
+.vscode/
+.idea/
+
+# Fichiers de sauvegarde
+*.bak
+*.swp
+*.swo
+
+# Fichiers de logs
+*.log
+
+# Fichiers de cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Fichiers de tests
+/.coverage
+/.pytest_cache/
+/nose2-results/
+
+# Fichiers de documentation
+/docs/
+
+# Fichiers de configuration
+*.env
+.env.local
+.env.*.local
+.env.override
+.env.local.override
+.env.test
+.env.test.override
+
+# Fichiers de dépendances
+/node_modules/
+/bower_components/
+/yarn.lock
+/package-lock.json

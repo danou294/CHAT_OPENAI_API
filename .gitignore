@@ -1,0 +1,30 @@
+# Fichiers générés par Django
+*.pyc
+*.pyo
+__pycache__/
+
+# Fichier de configuration local
+settings_local.py
+
+# Fichiers de sauvegarde
+*.bak
+*.swp
+
+# Fichiers de logs
+*.log
+
+# Fichiers de médias téléchargés
+media/
+
+# Fichiers de base de données
+db.sqlite3
+
+# Fichiers de cache
+__pycache__/
+.cache/
+
+# Dossier de virtualenv
+venv/
+
+# Fichiers de dépendances
+pip-lock.txt

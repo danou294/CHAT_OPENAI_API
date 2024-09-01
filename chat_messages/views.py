@@ -71,7 +71,10 @@ def add_message(request, session_id):
                 is_sent_to_openai=True
             )
 
-        return JsonResponse({'message': f'Le message a été ajouté avec succès dans la session {session_id}.'}, status=201)
+        # Retourner les messages mis à jour
+        updated_messages = Message.objects.filter(chat_session=chat_session).order_by('timestamp')
+        message_list = list(updated_messages.values('id', 'sender_id', 'content', 'timestamp', 'is_from_user'))
+        return JsonResponse({'messages': message_list}, status=201)
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Données JSON invalides.'}, status=400)
     except Exception as e:

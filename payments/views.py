@@ -18,14 +18,16 @@ class StripeCheckoutView(APIView):
             checkout_session = stripe.checkout.Session.create(
                 line_items=[
                     {
-                        'price': settings.STRIPE_PRICE_ID,  
+                        'price': settings.STRIPE_PRICE_ID,  # Utiliser l'ID de prix depuis settings
                         'quantity': 1,
                     },
                 ],
                 payment_method_types=['card'],
                 mode='subscription',
-                success_url=f"{settings.SITE_URL}/premium-offer?success=true&session_id={{CHECKOUT_SESSION_ID}}",
-                cancel_url=f"{settings.SITE_URL}/premium-offer?canceled=true",
+                # Rediriger vers http://localhost:5173/premium-offer en cas de succès
+                success_url='http://localhost:5173/premium-offer?success=true&session_id={CHECKOUT_SESSION_ID}',
+                # Rediriger vers http://localhost:5173/premium-offer en cas d'annulation
+                cancel_url='http://localhost:5173/premium-offer?canceled=true',
             )
             logger.info('Stripe Checkout Session created successfully: %s', checkout_session.id)
             return Response({'url': checkout_session.url})

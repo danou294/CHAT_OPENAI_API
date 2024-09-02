@@ -135,13 +135,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # OpenAI API Key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+# CORS Headers settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://codesphere.fr",
-    'http://localhost:5173',
+]
+
+# Autorisez les en-têtes et méthodes spécifiques si nécessaire
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-requested-with',
+    'x-csrftoken',
+    'x-xsrf-token'
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
 ]
 
 
-# Accéder aux variables d'environnement
-STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
-STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_PUBLIC_KEY')
+
+SITE_URL = 'http://localhost:8000' 

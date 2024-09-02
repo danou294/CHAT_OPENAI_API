@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from chat_messages.views import add_message, delete_message, get_messages
 from chat_sessions.views import create_session, list_sessions, delete_session
+from payments.views import create_checkout_session, webhook_received
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +16,7 @@ urlpatterns = [
     path('messages/<int:session_id>/add/', add_message, name='add_message'),  # Ajouter un message à une session
     path('messages/<int:message_id>/delete/', delete_message, name='delete_message'),  # Supprimer un message
     path('messages/<int:session_id>/', get_messages, name='get_messages'),  # Obtenir les messages d'une session
+
+path('create-checkout-session/', create_checkout_session, name='create_checkout_session'),
+    path('webhook/', webhook_received, name='webhook')
 ]

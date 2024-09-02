@@ -45,8 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chat_sessions',
     'chat_messages',
+    "payments",
     'rest_framework',
     'corsheaders',
+    
 ]
 
 MIDDLEWARE = [
@@ -58,8 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
 ]
+
 
 ROOT_URLCONF = 'OpenAichat.urls'
 
@@ -136,4 +138,10 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://codesphere.fr",
+    'http://localhost:5173',
 ]
+
+
+# Accéder aux variables d'environnement
+STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_TEST_PUBLIC_KEY')

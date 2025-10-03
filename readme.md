@@ -1,188 +1,258 @@
-# Mini Chatbot avec FastAPI et OpenAI
+# 🚀 CodeSphere Backend API
 
-Ce projet implémente un mini chatbot utilisant FastAPI et l'API OpenAI. L'application permet de générer des réponses de chatbot basées sur des messages utilisateur, en utilisant le modèle GPT-3.5-turbo.
+**API Django pour la plateforme CodeSphere**
 
-## Prérequis
+Backend Django qui fournit les APIs nécessaires pour l'éditeur de code, le chatbot IA, et le système de paiement de CodeSphere.
 
-- Python 3.9 ou supérieur
-- Docker (facultatif, si vous souhaitez exécuter l'application dans un conteneur)
+## ✨ Fonctionnalités
 
-## Installation et Configuration
+### 🤖 **Chatbot IA**
+- **Intégration OpenAI** pour les réponses intelligentes
+- **Gestion des conversations** avec historique
+- **Génération automatique** de titres de conversations
+- **Support multi-températures** pour les réponses
 
-### 1. Cloner le dépôt
+### 💳 **Système de Paiement**
+- **Intégration Stripe** pour les paiements sécurisés
+- **Gestion des sessions** de checkout
+- **Webhooks** pour la validation des paiements
 
-Clonez le projet depuis votre dépôt Git local :
+### 🔐 **Authentification**
+- **CORS configuré** pour le frontend React
+- **Gestion des sessions** utilisateur
+- **Sécurité** avec tokens d'authentification
 
+## 🛠️ Installation
+
+### Prérequis
+- **Python 3.8+**
+- **pip** ou **pipenv**
+- **Compte OpenAI** (pour l'IA)
+- **Compte Stripe** (pour les paiements)
+
+### 1. Cloner le projet
 ```bash
-git clone https://github.com/danou294/OPENAI-API.git
-cd OPENAI-API.git
+git clone https://github.com/danou294/CodeSphere.git
+cd CHAT_OPENAI_API
 ```
 
-### 2. Configurer les variables d'environnement
-
-Créez un fichier .env à la racine du projet et ajoutez votre clé API OpenAI :
-
-```bash
-OPENAI_API_KEY=your_openai_api_key_here
-```
-
-### 3. Créer un environnement virtuel
-
-Il est recommandé de créer un environnement virtuel pour gérer les dépendances du projet :
-
+### 2. Créer un environnement virtuel
 ```bash
 python -m venv venv
-source venv/bin/activate  # Sur Windows, utilisez `venv\Scripts\activate`
-````
+source venv/bin/activate  # Sur Windows: venv\Scripts\activate
+```
 
-### 4. Installer les dépendances
-
-Installez les dépendances du projet listées dans le fichier requirements.txt :
-
+### 3. Installer les dépendances
 ```bash
 pip install -r requirements.txt
 ```
 
-## Lancer l'application
+### 4. Configuration des variables d'environnement
 
-### 1. Exécuter localement avec Uvicorn
+Créez un fichier `.env` à la racine du projet :
 
-Exécutez la commande suivante pour démarrer l'application localement :
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=sk-your_openai_api_key_here
 
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+STRIPE_TEST_PUBLIC_KEY=pk_test_your_stripe_public_key
+STRIPE_PRICE_ID=price_your_stripe_price_id
+
+# Django Configuration
+DEBUG=True
+SECRET_KEY=your_django_secret_key_here
+
+# Database (optionnel - SQLite par défaut)
+DATABASE_URL=sqlite:///db.sqlite3
+```
+
+### 5. Migrations de la base de données
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 6. Créer un superutilisateur (optionnel)
+```bash
+python manage.py createsuperuser
+```
+
+### 7. Démarrer le serveur
 ```bash
 python manage.py runserver
 ```
 
-L'application sera accessible à l'adresse http://127.0.0.1:8000.
+L'API sera accessible sur `http://localhost:8000`
 
-### 2. Exécuter avec Docker
+## 🏗️ Architecture
 
-Si vous préférez utiliser Docker, suivez les étapes suivantes :
-
-#### a. Construire et lancer l'image Docker
-
-```bash
-docker-compose up --build 
+### **Structure du Projet**
+```
+CHAT_OPENAI_API/
+├── chat_messages/        # Gestion des messages IA
+│   ├── models.py        # Modèle Message
+│   ├── views.py         # API endpoints pour les messages
+│   └── migrations/      # Migrations de base de données
+├── chat_sessions/       # Gestion des conversations
+│   ├── models.py        # Modèle ChatSession
+│   ├── views.py         # API endpoints pour les sessions
+│   └── migrations/      # Migrations de base de données
+├── payments/            # Système de paiement Stripe
+│   ├── models.py        # Modèles de paiement
+│   ├── views.py         # API endpoints Stripe
+│   └── migrations/      # Migrations de base de données
+├── OpenAichat/          # Configuration Django
+│   ├── settings.py      # Paramètres Django
+│   ├── urls.py          # Routage des URLs
+│   └── wsgi.py          # Configuration WSGI
+└── manage.py            # Script de gestion Django
 ```
 
-L'application sera accessible à l'adresse http://localhost.
+### **Technologies Utilisées**
+- **Django 4.2** - Framework web Python
+- **OpenAI API** - Intelligence artificielle
+- **Stripe** - Paiements en ligne
+- **SQLite** - Base de données (par défaut)
+- **CORS** - Cross-Origin Resource Sharing
+- **Django REST** - APIs REST
 
-## Utilisation
+## 📡 Endpoints API
 
-Une fois l'application en cours d'exécution, vous pouvez interagir avec le chatbot en envoyant des requêtes POST au point de terminaison /chat.
-
-### Exemple de requête
-
-Routes pour les Sessions de Chat
-Créer une session de chat :
-
-URL: `/sessions/create/`
-
-Vue associée: `create_session`
-
-Description: Crée une nouvelle session de chat.
-
-Méthode HTTP: POST
-
-Exemple de requête curl:
-
-```bash
-curl -X POST "http://localhost:8000/sessions/create/" \
--H "Content-Type: application/json" \
--d '{}'
+### **Chat Sessions**
+```
+GET    /api/sessions/                    # Lister les sessions
+POST   /api/sessions/create/             # Créer une session
+POST   /api/conversations/create/        # Créer conversation + message
+DELETE /api/sessions/{id}/delete/        # Supprimer une session
 ```
 
-Lister toutes les sessions de chat :
-
-URL: `/sessions/`
-
-Vue associée: `list_sessions`
-
-Description: Récupère une liste de toutes les sessions de chat existantes.
-
-Méthode HTTP: GET
-
-Exemple de requête curl:
-
-```bash
-curl -X GET "http://localhost:8000/sessions/"
+### **Messages**
+```
+GET    /api/sessions/{id}/messages/      # Obtenir les messages
+POST   /api/sessions/{id}/messages/add/ # Ajouter un message
+DELETE /api/messages/{id}/delete/        # Supprimer un message
 ```
 
-Supprimer une session de chat :
-
-URL: `/sessions/<int:session_id>/delete/`
-
-Vue associée: `delete_session`
-
-Description: Supprime une session de chat spécifique en utilisant son ID.
-
-Méthode HTTP: DELETE
-
-Exemple de requête curl:
-
-```bash
-curl -X DELETE "http://localhost:8000/sessions/1/delete/"
+### **Paiements**
+```
+POST   /api/create-checkout-session/    # Créer session Stripe
 ```
 
-Remplacez 1 par l'ID de la session que vous souhaitez supprimer.
-
-Routes pour les Messages
-Ajouter un message à une session de chat :
-
-URL: `/messages/<int:session_id>/add/`
-
-Vue associée: `add_message`
-
-Description: Ajoute un nouveau message à une session de chat spécifique.
-
-Méthode HTTP: POST
-
-Exemple de requête curl:
+## 🔧 Scripts Disponibles
 
 ```bash
-curl -X POST "http://localhost:8000/messages/1/add/" \
--H "Content-Type: application/json" \
--d '{
-    "message": "Quels sont les avantages d'utiliser Python?"
-}'
+# Développement
+python manage.py runserver              # Serveur de développement
+python manage.py runserver 0.0.0.0:8000 # Serveur accessible depuis l'extérieur
+
+# Base de données
+python manage.py makemigrations         # Créer les migrations
+python manage.py migrate               # Appliquer les migrations
+python manage.py migrate --fake-initial # Migrations initiales
+
+# Administration
+python manage.py createsuperuser       # Créer un superutilisateur
+python manage.py shell                 # Shell Django interactif
+
+# Tests
+python manage.py test                  # Lancer les tests
 ```
 
-Remplacez 1 par l'ID de la session à laquelle vous souhaitez ajouter le message.
+## 🐳 Déploiement avec Docker
 
-Supprimer un message spécifique :
-
-URL: `/messages/<int:message_id>/delete/`
-
-Vue associée: `delete_message`
-
-Description: Supprime un message spécifique en utilisant son ID.
-
-Méthode HTTP: DELETE
-
-Exemple de requête curl:
-
+### **Docker Compose**
 ```bash
-curl -X DELETE "http://localhost:8000/messages/1/delete/"
+# Construire et démarrer les services
+docker-compose up --build
+
+# Démarrer en arrière-plan
+docker-compose up -d
+
+# Arrêter les services
+docker-compose down
 ```
 
-Remplacez 1 par l'ID du message que vous souhaitez supprimer.
+### **Configuration Docker**
+- **Django** sur le port 8000
+- **Nginx** sur le port 80 (reverse proxy)
+- **Volume** pour la base de données SQLite
 
-Obtenir tous les messages d'une session de chat :
+## 🔒 Sécurité
 
-URL: `/messages/<int:session_id>/`
-
-Vue associée: `get_messages`
-
-Description: Récupère tous les messages associés à une session de chat spécifique.
-
-Méthode HTTP: GET
-
-Exemple de requête curl:
-
-```bash
-curl -X GET "http://localhost:8000/messages/1/"
+### **Configuration CORS**
+```python
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Frontend React
+    "http://localhost:3001",  # Frontend React (port alternatif)
+]
 ```
 
-Remplacez 1 par l'ID de la session dont vous souhaitez obtenir les messages.
+### **Variables d'environnement**
+- Toutes les clés sensibles sont dans `.env`
+- `.env` est dans `.gitignore`
+- Utilisation de `python-decouple` pour la gestion
 
+## 📊 Base de Données
 
+### **Modèles Principaux**
+
+#### **ChatSession**
+```python
+- id: Primary Key
+- participant_id: CharField (ID utilisateur)
+- title: CharField (Titre de la conversation)
+- created_at: DateTimeField
+```
+
+#### **Message**
+```python
+- id: Primary Key
+- chat_session: ForeignKey vers ChatSession
+- sender_id: CharField (ID expéditeur)
+- content: TextField (Contenu du message)
+- is_from_user: BooleanField
+- is_sent_to_openai: BooleanField
+- message_response: TextField (Réponse IA)
+- timestamp: DateTimeField
+```
+
+## 🚀 Déploiement en Production
+
+### **Variables d'environnement de production**
+```env
+DEBUG=False
+SECRET_KEY=your_production_secret_key
+OPENAI_API_KEY=sk-your_production_openai_key
+STRIPE_SECRET_KEY=sk_live_your_live_stripe_key
+DATABASE_URL=postgresql://user:pass@host:port/db
+```
+
+### **Serveur Web**
+- **Gunicorn** pour servir Django
+- **Nginx** comme reverse proxy
+- **PostgreSQL** pour la base de données
+
+## 🤝 Contribution
+
+1. **Fork** le projet
+2. **Créer** une branche feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit** vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** vers la branche (`git push origin feature/AmazingFeature`)
+5. **Ouvrir** une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## 🆘 Support
+
+- **Issues** : [GitHub Issues](https://github.com/danou294/CodeSphere/issues)
+- **Email** : danielevy29@gmail.com
+
+---
+
+**Fait avec ❤️ en France** 🇫🇷
+
+*CodeSphere Backend - API puissante pour votre plateforme de développement*

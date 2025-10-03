@@ -137,6 +137,8 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # CORS Headers settings
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3001",
     "http://localhost:5173",
     "https://codesphere.fr",
 ]
@@ -160,7 +162,7 @@ CORS_ALLOW_METHODS = [
 ]
 
 
-STRIPE_SECRET_KEY = os.getenv('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_PRICE_ID=os.getenv('STRIPE_PRICE_ID')
 
 SITE_URL = 'http://localhost:8000' 

@@ -3,7 +3,7 @@ from django.urls import path
 
 # Importation des vues nécessaires
 from chat_messages.views import add_message, delete_message, get_messages
-from chat_sessions.views import create_session, list_sessions, delete_session
+from chat_sessions.views import create_session, list_sessions, delete_session, create_conversation_with_message
 from payments.views import StripeCheckoutView
 
 # URL patterns
@@ -11,7 +11,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Routes pour les sessions de chat avec préfixe /api/
-    path('api/sessions/create/', create_session, name='create_session'),  # Créer une nouvelle session de chat
+    path('api/sessions/create/', create_session, name='create_session'),  # Créer une nouvelle session de chat vide
+    path('api/conversations/create/', create_conversation_with_message, name='create_conversation_with_message'),  # Créer une conversation avec premier message
     path('api/sessions/', list_sessions, name='list_sessions'),  # Lister toutes les sessions de chat
     path('api/sessions/<int:session_id>/delete/', delete_session, name='delete_session'),  # Supprimer une session de chat
     

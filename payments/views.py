@@ -24,13 +24,16 @@ class StripeCheckoutView(APIView):
                 ],
                 payment_method_types=['card'],
                 mode='subscription',
-                # Rediriger vers http://localhost:5173/premium-offer en cas de succès
-                success_url='http://localhost:5173/premium-offer?success=true&session_id={CHECKOUT_SESSION_ID}',
-                # Rediriger vers http://localhost:5173/premium-offer en cas d'annulation
-                cancel_url='http://localhost:5173/premium-offer?canceled=true',
+                # Rediriger vers http://localhost:3000/premium-offer en cas de succès
+                success_url='http://localhost:3000/premium-offer?success=true&session_id={CHECKOUT_SESSION_ID}',
+                # Rediriger vers http://localhost:3000/premium-offer en cas d'annulation
+                cancel_url='http://localhost:3000/premium-offer?canceled=true',
             )
             logger.info('Stripe Checkout Session created successfully: %s', checkout_session.id)
-            return Response({'url': checkout_session.url})
+            return Response({
+                'sessionId': checkout_session.id,
+                'url': checkout_session.url
+            })
         except stripe.error.StripeError as e:
             logger.error('Stripe error occurred: %s', e.error.message)
             return Response(
@@ -43,3 +46,4 @@ class StripeCheckoutView(APIView):
                 {'error': f'An unexpected error occurred: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+

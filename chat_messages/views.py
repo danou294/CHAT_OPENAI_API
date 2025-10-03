@@ -13,6 +13,24 @@ def calculate_max_tokens(context, message):
     total_length = sum(len(m) for m in context) + len(message)
     return min(4096 - total_length, 1000)
 
+# Fonction pour générer un titre de conversation
+def generate_conversation_title(message):
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Génère un titre court et descriptif (maximum 50 caractères) pour cette conversation basé sur le premier message de l'utilisateur. Réponds uniquement avec le titre, sans guillemets ni formatage."},
+                {"role": "user", "content": f"Premier message: {message}"}
+            ],
+            temperature=0.3,
+            max_tokens=50
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"❌ [OPENAI] Erreur génération titre: {str(e)}")
+        return "Nouvelle conversation"
+
 # Fonction pour envoyer un message à OpenAI et obtenir une réponse
 def send_to_openai(context, message, temperature):
     openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -61,6 +79,19 @@ def add_message(request, session_id):
         
         # Envoyer le message à OpenAI et obtenir la réponse
         if is_from_user:
+            # Générer un titre si c'est le premier message de la conversation
+            if not chat_session.title and len(context_messages) == 1:
+                print(f"🔵 [DJANGO] Génération du titre pour la session {session_id}")
+                try:
+                    generated_title = generate_conversation_title(content)
+                    chat_session.title = generated_title
+                    chat_session.save()
+                    print(f"✅ [DJANGO] Titre généré: {generated_title}")
+                except Exception as e:
+                    print(f"❌ [DJANGO] Erreur génération titre: {str(e)}")
+                    chat_session.title = "Nouvelle conversation"
+                    chat_session.save()
+            
             response_content = send_to_openai(list(context_messages), content, temperature)
             # Création du message de réponse d'OpenAI
             Message.objects.create(
@@ -89,9 +120,14 @@ def delete_message(request, message_id):
 
 @require_http_methods(["GET"])
 def get_messages(request, session_id):
+    print(f"🔵 [DJANGO] get_messages appelé pour session {session_id}")
     chat_session = get_object_or_404(ChatSession, pk=session_id)
+    print(f"🔵 [DJANGO] Session trouvée: {chat_session.id}")
+    
     messages = Message.objects.filter(chat_session=chat_session).order_by('timestamp')
     message_list = list(messages.values('id', 'sender_id', 'content', 'timestamp', 'is_from_user'))
+    print(f"✅ [DJANGO] Retour de {len(message_list)} messages pour session {session_id}")
+    
     return JsonResponse({'messages': message_list})
 
 @require_http_methods(["POST"])

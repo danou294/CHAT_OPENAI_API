@@ -27,4 +27,4 @@ __pycache__/
 venv/
 
 # Fichiers de dépendances
-pip-lock.txt
+pip-lock.txt.env

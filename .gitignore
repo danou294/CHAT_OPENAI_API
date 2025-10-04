@@ -1,30 +1,39 @@
-# Fichiers générés par Django
-*.pyc
-*.pyo
-__pycache__/
-
-# Fichier de configuration local
-settings_local.py
-
-# Fichiers de sauvegarde
-*.bak
-*.swp
-
-# Fichiers de logs
+# Default Django .gitignore
 *.log
-
-# Fichiers de médias téléchargés
-media/
-
-# Fichiers de base de données
-db.sqlite3
-
-# Fichiers de cache
+*.pot
+*.pyc
 __pycache__/
-.cache/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-# Dossier de virtualenv
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.prod
+.env.backup
+.env.temp
+*.env
+*.env.*
+
+# Django-specific files
+media/
+static/
+staticfiles/
+.DS_Store
+
+# Virtual environment
 venv/
+env/
+.venv/
 
-# Fichiers de dépendances
-pip-lock.txt.env
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup
